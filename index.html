@@ -1,71 +1,185 @@
 <!DOCTYPE html>
-<html>
-  <head>
-      <script type="module" src="./script.js"></script>
-      <link rel="stylesheet" type="text/css" href="style.css" />
-  </head>
-  <body style="background-image: url('./bg3.jpg'); background-size: cover; height: 100vh;">
-    <div class="window" id="welcome" style="background-color: #147907; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px; border: solid; width: 200px; border-radius: 16px">
-        <p class="windowheader" id="welcomeheader" style="cursor: move; background: #ddd; padding: 4px; margin: -16px -16px 12px -16px; border-top-left-radius: 12px; border-top-right-radius: 12px;">|Welcome!|</p></p>
-          <p style="cursor: pointer" id="welcomeclose">X</p>
-          <p>Hello User!</p>
-          <h2>this tab can be dragged by click and dragging</h2>
-          <h1>Welcome to my OS</h1>
-          <img src="./bg.png" />
-          <a href="https://mail.google.com/mail/u/0/#inbox/">Email me on njstechnigames@gmail.com!</a>
-    </div>
-    <div style="position: absolute; width: 100%; display: flex; backdrop-filter: blur(10px); background-color: rgba(6, 209, 169, 0.25); color: #000000; justify-content: space-between;">
-      <p style="margin-left: 16px;">
-        NicksterOS    
-      </p> 
-      <p style="cursor: pointer" id="welcomeopen">|Welcome!|</p>
-      <p id="timeElement" style="margin-right: 16px;">
-        Time
-      </p>
-    </div>
-    <div class="thechosenone" id="desktopApps" style="padding-top: 64px; padding-left: 16px;">
-      <div id="notes-icon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: fit-content">
-        <img src="./note_app.png" style="width: 55px; height: 64px; border-radius: 16px;">
-        <p style="margin: 0px; color: #fff; ">Nick Notes</p>
-      </div>
-    </div>
-    <div class="window" id="notes" style="display: none; background-color: #ffffff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px; border: solid; width: 200px; border-radius: 16px">
-        <div class="windowheader" id="notesheader" style="cursor: move; background: #2eac00; padding: 4px; margin: -16px -16px 12px -16px; border-top-left-radius: 12px; border-top-right-radius: 12px;">Nick Notes</div>
-          <p style="cursor: pointer" id="closewindow">X</p>
-          <div contenteditable="true" style="outline: none; min-height: 100px;">
-            Sample text
-          </div>
-    </div>
-      <div class="thechosenone" id="desktopApps" style="padding-top: 64px; padding-left: 16px;">
-      <div id="store-icon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: fit-content">
-        <img src="./app_store.png" style="width: 55px; height: 64px; border-radius: 16px;">
-        <p style="margin: 0px; color: #fff; ">App Archives</p>
-      </div>
-    </div>
-    <div class="window" id="store" style="display: none; background-color: #35b12a; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px; border: solid; width: 200px; border-radius: 16px">
-        <div class="windowheader" id="storeheader" style="cursor: move; background: #06b0ad; padding: 4px; margin: -16px -16px 12px -16px; border-top-left-radius: 12px; border-top-right-radius: 12px;">App Archives</div>
-          <p style="cursor: pointer" id="closewindow2">X</p>
-           ERR 404 No content found :[
-    </div>
-    <div id="terminal-icon" style="text-align: center; padding: 16px; filter: drop-shadow(0 0 8px black); width: fit-content; cursor: pointer;">
-      <img src="./terminal_icon.png" style="width: 55px; height: 64px; border-radius: 16px;">
-      <p style="margin: 0px; color: #fff;">LXTerminal</p>
-    </div>
-    <div class="window" id="terminal" style="display: none; background-color: #000000; color: #00ff00; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 250px; padding: 16px; border: solid 2px #00ff00; border-radius: 8px; font-family: monospace;">
-      <div class="windowheader" id="terminalheader" style="cursor: move; background: #333333; color: white; padding: 4px; margin: -16px -16px 12px -16px; border-top-left-radius: 6px; border-top-right-radius: 6px; display: flex; justify-content: space-between;">
-          <span>Terminal</span>
-          <span style="cursor: pointer;" id="terminalclose">X</span>
-      </div>
-      <div id="terminal-output" style="height: 170px; overflow-y: auto; margin-bottom: 8px;">
-          Nickster OS Type 'help' for available commands.<br>
-      </div>
-      <div style="display: flex;">
-          <span>user@NicksterOS:~$ &nbsp;</span>
-          <input type="text" id="terminal-input" style="background: transparent; border: none; color: #00ff00; outline: none; width: 100%; font-family: monospace;" autofocus>
-      </div>
-  </div>
-    <script src="script.js"></script>
-    <div class="closebutton" id="welcomeheader"></div>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NicksterOS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-image: url('./bg3.jpg'); background-size: cover; background-position: center; background-attachment: fixed; height: 100vh; margin: 0; overflow: hidden;">
 
+    <!-- Top Taskbar -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; display: flex; align-items: center; backdrop-filter: blur(10px); background-color: rgba(6, 209, 169, 0.35); color: #000000; justify-content: space-between; z-index: 99999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+      
+      <!-- Left side: OS Title -->
+      <div style="display: flex; align-items: center; gap: 8px; margin-left: 12px;">
+        <span style="font-weight: bold; cursor: default;">NicksterOS</span>
+      </div> 
+
+      <!-- Center: Start Button + Open Apps Taskbar Items -->
+      <div style="display: flex; align-items: center; gap: 10px; overflow-x: auto; flex: 1; padding: 0 15px;">
+        <button id="startBtn" style="cursor: pointer; background: transparent; border: none; padding: 0; display: flex; align-items: center; flex-shrink: 0;">
+          <img src="./start_icon.png" style="width: 30px; height: 30px; border-radius: 6px;">
+        </button>
+        <div id="openAppsContainer" style="display: flex; gap: 6px; align-items: center; overflow-x: auto;"></div>
+      </div>
+
+      <!-- Right side: Clock -->
+      <div id="timeElement" style="margin-right: 16px; font-weight: 500; font-size: 13px; flex-shrink: 0;">Time</div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="startMenu" style="display: none; position: absolute; top: 45px; left: 12px; width: 320px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(15px); color: white; border: 1px solid #00ff66; border-radius: 12px; padding: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 100000;">
+      <input type="text" placeholder="Search apps, settings..." style="width: 100%; padding: 8px; border-radius: 6px; border: none; outline: none; margin-bottom: 12px; box-sizing: border-box; background: #333; color: white;" />
+      <div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">Pinned Apps</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+        <div class="start-app-item" id="start-userguide" style="cursor: pointer; padding: 8px; border-radius: 8px;">
+          <img src="./userguide_icon.png" style="width: 36px; height: 36px; border-radius: 8px;"><br>
+          <span style="font-size: 11px;">User Guide</span>
+        </div>
+        <div class="start-app-item" id="start-notes" style="cursor: pointer; padding: 8px; border-radius: 8px;">
+          <img src="./note_app.png" style="width: 36px; height: 36px;"><br>
+          <span style="font-size: 11px;">Nick Notes</span>
+        </div>
+        <div class="start-app-item" id="start-store" style="cursor: pointer; padding: 8px; border-radius: 8px;">
+          <img src="./app_store.png" style="width: 36px; height: 36px;"><br>
+          <span style="font-size: 11px;">App Archives</span>
+        </div>
+        <div class="start-app-item" id="start-terminal" style="cursor: pointer; padding: 8px; border-radius: 8px;">
+          <img src="./terminal_icon.png" style="width: 36px; height: 36px;"><br>
+          <span style="font-size: 11px;">NRTerminal</span>
+        </div>
+        <div class="start-app-item" id="start-chrome" style="cursor: pointer; padding: 8px; border-radius: 8px;">
+          <img src="./chrome.png" style="width: 36px; height: 36px; border-radius: 8px;"><br>
+          <span style="font-size: 11px;">Chrome</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Icons Grid (Single Column Layout) -->
+    <div style="padding-top: 56px; padding-left: 16px; display: flex; flex-direction: column; gap: 12px; width: 85px;">
+        <div class="desktop-icon" id="userguide-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
+          <img src="./userguide_icon.png" style="width: 44px; height: 44px; border-radius: 10px;">
+          <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">User Guide</p>
+        </div>
+        <div class="desktop-icon" id="notes-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
+          <img src="./note_app.png" style="width: 44px; height: 44px; border-radius: 10px;">
+          <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">Nick Notes</p>
+        </div>
+        <div class="desktop-icon" id="store-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
+          <img src="./app_store.png" style="width: 44px; height: 44px; border-radius: 10px;">
+          <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">App Archives</p>
+        </div>
+        <div class="desktop-icon" id="terminal-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
+          <img src="./terminal_icon.png" style="width: 44px; height: 44px; border-radius: 10px;">
+          <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">NRTerminal</p>
+        </div>
+        <div class="desktop-icon" id="chrome-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
+          <img src="./chrome.png" style="width: 44px; height: 44px; border-radius: 10px;">
+          <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">Chrome</p>
+        </div>
+    </div>
+
+    <!-- STARTUP WELCOME POPUP NOTE -->
+    <div id="welcome-popup" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px; border: 2px solid #00ff66; width: 260px; border-radius: 16px; background-color: #147907; color: #fff; z-index: 50000; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        <div id="welcomeheader" style="background: #ddd; color: #000; padding: 6px 10px; margin: -16px -16px 12px -16px; border-top-left-radius: 14px; border-top-right-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: move;">
+            <span style="font-weight: bold; font-size: 12px;">|Welcome!|</span>
+            <span id="welcomeclose" style="cursor: pointer; font-weight: bold; padding: 2px 6px;">X</span>
+        </div>
+        <div style="font-family: sans-serif;">
+            <p style="margin: 4px 0;">Hello User!</p>
+            <h3 style="margin: 6px 0; font-size: 14px;">Welcome to NicksterOs! Tabs can be dragged by clicking and holding the top and can be minimised [-] maximised [square] and closed [x]. double click apps to open them! More in the user manual!</h3>
+            <img src="./bg.png" style="width: 100%; border-radius: 8px; margin: 6px 0;" />
+            <a href="https://mail.google.com/mail/u/0/#inbox/" target="_blank" style="color: #00ff66; font-size: 12px; display: block; margin-top: 6px;">Email me!</a>
+        </div>
+    </div>
+
+    <!-- WINDOW: User Guide App -->
+    <div class="window" id="userguide" style="display: none; background-color: #147907; color: #fff; position: absolute; top: 45%; left: 45%; width: 280px; border: 2px solid #00ff66; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); overflow: hidden;" data-title="User Guide">
+        <div class="windowheader" id="userguideheader" style="background: #ddd; color: #000; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #ccc;">
+            <span style="font-weight: bold; font-size: 12px;">|User Guide|</span>
+            <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
+                <button class="min-btn" style="cursor: pointer; background: #bbb; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">_</button>
+                <button class="max-btn" style="cursor: pointer; background: #bbb; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">□</button>
+                <span id="userguideclose" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
+            </div>
+        </div>
+        <div style="padding: 16px; font-family: sans-serif;">
+            <!-- YOU CAN WRITE YOUR USER GUIDE CONTENT HERE -->
+            <p style="margin: 4px 0;">User Guide</p>
+            <h3 style="margin: 6px 0; font-size: 14px;">About the OS:</h3>
+            <p style="font-size: 13px; color: #e0e0e0;">For now, NicksterOS only has 5 apps (more coming soon) and those 5 apps are: user guide (what you're in right now), chrome, NRterminal, Nick notes (notes app), and App Archives (no apps yet :[). Nick notes is used for writing notes and later a file system will be added to the OS soon. Chrome is exactly what it sounds like, although it uses bing as chrome doesnt work properly, i already made the chrome logo so i decided to keep it also, if you click on a link, it will open that tab in your actual browser (still a bug in progress). NRterminal is used for simple commands and isnt really useful (yet :]). App archives is a app that will let you "download" apps to your desktop. APPS COMING SOON: Settings: can change backround, user name, etc. Snake: simple game to play in the desktop :]. Calculator: used for simple calculations (its a calculator! what elso do you expect? doom? good idea acctually, ill consider adding it).</p>
+        </div>
+    </div>
+
+    <!-- WINDOW 2: Nick Notes -->
+    <div class="window" id="notes" style="display: none; background-color: #ffffff; position: absolute; top: 40%; left: 40%; width: 520px; height: 350px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); overflow: hidden;" data-title="Nick Notes">
+        <div class="windowheader" id="notesheader" style="background: #2eac00; color: white; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #ccc;">
+            <span style="font-weight: bold; font-family: sans-serif; font-size: 13px;">Nick Notes</span>
+            <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
+                <button class="min-btn" style="cursor: pointer; background: #1f7500; color: white; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">_</button>
+                <button class="max-btn" style="cursor: pointer; background: #1f7500; color: white; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">□</button>
+                <span id="closewindow" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
+            </div>
+        </div>
+        <textarea style="width: 100%; height: calc(100% - 35px); border: none; padding: 10px; font-family: sans-serif; resize: none; box-sizing: border-box;" placeholder="Type your notes here..."></textarea>
+    </div>
+
+    <!-- WINDOW 3: App Archives -->
+    <div class="window" id="store" style="display: none; background-color: #f8f9fa; position: absolute; top: 45%; left: 45%; width: 520px; height: 350px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); overflow: hidden;" data-title="App Archives">
+        <div class="windowheader" id="storeheader" style="background: #e9ecef; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #ccc;">
+            <span style="font-weight: bold; font-family: sans-serif; font-size: 13px;">App Archives</span>
+            <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
+                <button class="min-btn" style="cursor: pointer; background: #ccc; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">_</button>
+                <button class="max-btn" style="cursor: pointer; background: #ccc; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">□</button>
+                <span id="closewindow2" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
+            </div>
+        </div>
+        <div style="padding: 20px; font-family: sans-serif;">
+            <h3>App Archives</h3>
+            <p>Welcome to the app store! More apps coming soon.</p>
+        </div>
+    </div>
+
+    <!-- WINDOW 4: LXTerminal -->
+    <div class="window" id="terminal" style="display: none; background-color: #0c0c0c; color: #00ff66; position: absolute; top: 50%; left: 50%; width: 570px; height: 350px; border: 1px solid #444; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.5); overflow: hidden; font-family: monospace;" data-title="LXTerminal">
+        <div class="windowheader" id="terminalheader" style="background: #1f1f1f; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #444;">
+            <span style="font-weight: bold; font-size: 13px;">user@NicksterOS: ~</span>
+            <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
+                <button class="min-btn" style="cursor: pointer; background: #333; color: white; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">_</button>
+                <button class="max-btn" style="cursor: pointer; background: #333; color: white; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">□</button>
+                <span id="terminalclose" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
+            </div>
+        </div>
+        <div style="padding: 10px; height: calc(100% - 40px); overflow-y: auto; box-sizing: border-box;" id="terminal-body">
+            <div id="terminal-output">Welcome to NRTerminal (NicksterOS v1.0)<br>Type 'help' for available commands.<br><br></div>
+            <div style="display: flex;">
+                <span>user@NicksterOS:~$ &nbsp;</span>
+                <input type="text" id="terminal-input" style="background: transparent; border: none; color: #00ff66; outline: none; flex: 1; font-family: monospace; font-size: 14px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- WINDOW 5: Google Chrome Browser -->
+    <div class="window" id="chrome" style="display: none; background-color: #f1f3f4; position: absolute; top: 42%; left: 42%; width: 800px; height: 480px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); overflow: hidden;" data-title="Google Chrome">
+        <div class="windowheader" id="chromeheader" style="background: #dee1e6; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #ccc;">
+            <span style="font-weight: bold; font-family: sans-serif; font-size: 13px;">Google Chrome</span>
+            <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
+                <button class="min-btn" style="cursor: pointer; background: #ccc; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">_</button>
+                <button class="max-btn" style="cursor: pointer; background: #ccc; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">□</button>
+                <span id="chromeclose" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px; padding: 6px; background: white; border-bottom: 1px solid #ddd; align-items: center;">
+            <button id="chrome-home" style="background: #f1f3f4; border: 1px solid #ccc; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; font-size: 12px;">🏠</button>
+            <input type="text" id="chrome-url" placeholder="Search Bing or type a URL" style="flex: 1; padding: 5px 10px; border: 1px solid #ccc; border-radius: 14px; outline: none; font-size: 13px;">
+            <button id="chrome-go" style="background: #1a73e8; color: white; border: none; padding: 5px 14px; border-radius: 14px; cursor: pointer; font-weight: bold; font-size: 12px;">Go</button>
+        </div>
+        <div style="width: 100%; height: calc(100% - 75px); background: white;">
+            <iframe id="chrome-frame" src="https://www.bing.com" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
