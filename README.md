@@ -12,6 +12,6 @@ Here are what it includes:
 - top bar: has the name of the os, thime and button to open the welcome screen.
 
 # UPDATES:
--new apps
--new look for some things
--added start menu
+- new apps
+- new look for some things
+- added start menu
