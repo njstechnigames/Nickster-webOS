@@ -1,192 +1,284 @@
+// Live Clock
 function updateTime() {
     var currentTime = new Date().toLocaleString();
     var timeText = document.querySelector("#timeElement");
-    timeText.innerHTML = currentTime;
+    if (timeText) timeText.innerHTML = currentTime;
 }
 setInterval(updateTime, 1000);
+updateTime();
 
-// Make the DIV element draggable:
-dragElement(document.getElementById("welcome"));  
+let highestZIndex = 10;
 
-// Step 1: Define a function called `dragElement` that makes an HTML element draggable.
+// Dynamic Taskbar
+function updateTaskbar() {
+    const container = document.getElementById("openAppsContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const allWindows = document.querySelectorAll(".window");
+    allWindows.forEach(win => {
+        if (win.style.display !== "none" || win.dataset.opened === "true") {
+            const title = win.getAttribute("data-title") || win.id;
+            const btn = document.createElement("button");
+            btn.textContent = title;
+            
+            const isHidden = (win.style.display === "none");
+            
+            if (isHidden) {
+                btn.style.cssText = "background: rgba(0,0,0,0.3); color: #00ff66; border: 1px dashed #00ff66; border-radius: 4px; padding: 2px 8px; cursor: pointer; font-size: 12px; opacity: 0.7; flex-shrink: 0;";
+            } else {
+                btn.style.cssText = "background: rgba(0,0,0,0.6); color: #00ff66; border: 1px solid #00ff66; border-radius: 4px; padding: 2px 8px; cursor: pointer; font-size: 12px; flex-shrink: 0;";
+            }
+            
+            btn.addEventListener("click", () => {
+                if (win.style.display === "none") {
+                    win.style.display = "block";
+                    win.style.zIndex = ++highestZIndex;
+                } else {
+                    win.style.display = "none";
+                }
+                updateTaskbar();
+            });
+            
+            container.appendChild(btn);
+        }
+    });
+}
+
+function openWindow(element) {
+    if (!element) return;
+    element.style.display = "block";
+    element.dataset.opened = "true";
+    element.style.zIndex = ++highestZIndex;
+    updateTaskbar();
+}
+
+function closeWindow(element) {
+    if (!element) return;
+    element.style.display = "none";
+    element.dataset.opened = "false";
+    updateTaskbar();
+}
+
+// Draggable Window Handler
 function dragElement(element) {
-  // Step 2: Set up variables to keep track of the element's position.
-  var initialX = 0;
-  var initialY = 0;
-  var currentX = 0;
-  var currentY = 0;
+  var initialX = 0, initialY = 0, currentX = 0, currentY = 0;
+  var header = document.getElementById(element.id + "header") || element.querySelector(".windowheader");
 
-  // Step 3: Check if there is a special header element associated with the draggable element.
-  if (document.getElementById(element.id + "header")) {
-    // Step 4: If present, assign the `dragMouseDown` function to the header's `onmousedown` event.
-    // This allows you to drag the window around by its header.
-    document.getElementById(element.id + "header").onmousedown = startDragging;
+  if (header) {
+    header.onmousedown = startDragging;
   } else {
-    // Step 5: If not present, assign the function directly to the draggable element's `onmousedown` event.
-    // This allows you to drag the window by holding down anywhere on the window.
     element.onmousedown = startDragging;
   }
 
-  // Step 6: Define the `startDragging` function to capture the initial mouse position and set up event listeners.
   function startDragging(e) {
+    if (element.dataset.maximized === "true") return;
     e = e || window.event;
     e.preventDefault();
-    // Step 7: Get the mouse cursor position at startup.
     initialX = e.clientX;
     initialY = e.clientY;
-    // Step 8: Set up event listeners for mouse movement (`elementDrag`) and mouse button release (`closeDragElement`).
     document.onmouseup = stopDragging;
-    document.onmousemove = dragElement;
+    document.onmousemove = elementDrag;
   }
 
-  // Step 9: Define the `elementDrag` function to calculate the new position of the element based on mouse movement.
-  function dragElement(e) {
+  function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
-    // Step 10: Calculate the new cursor position.
     currentX = initialX - e.clientX;
     currentY = initialY - e.clientY;
     initialX = e.clientX;
     initialY = e.clientY;
-    // Step 11: Update the element's new position by modifying its `top` and `left` CSS properties.
     element.style.top = (element.offsetTop - currentY) + "px";
     element.style.left = (element.offsetLeft - currentX) + "px";
   }
 
-  // Step 12: Define the `stopDragging` function to stop tracking mouse movement by removing the event listeners.
   function stopDragging() {
     document.onmouseup = null;
     document.onmousemove = null;
   }
 }
 
-const notesIcon = document.getElementById("notes-icon");
+// Initialize windows & startup popup
+document.querySelectorAll(".window").forEach(win => {
+    dragElement(win);
+    win.addEventListener("mousedown", () => {
+        win.style.zIndex = ++highestZIndex;
+    });
 
-notesIcon.addEventListener("dblclick", () => {
-    openWindow(notesScreen);
-    notesScreen.style.zIndex = highestZIndex++;
+    const minBtn = win.querySelector(".min-btn");
+    if (minBtn) {
+        minBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            win.style.display = "none";
+            updateTaskbar();
+        });
+    }
+
+    const maxBtn = win.querySelector(".max-btn");
+    if (maxBtn) {
+        maxBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (win.dataset.maximized === "true") {
+                win.style.top = win.dataset.prevTop;
+                win.style.left = win.dataset.prevLeft;
+                win.style.width = win.dataset.prevWidth;
+                win.style.height = win.dataset.prevHeight;
+                win.style.transform = "translate(-50%, -50%)";
+                win.dataset.maximized = "false";
+            } else {
+                win.dataset.prevTop = win.style.top;
+                win.dataset.prevLeft = win.style.left;
+                win.dataset.prevWidth = win.style.width;
+                win.dataset.prevHeight = win.style.height;
+                win.style.top = "40px";
+                win.style.left = "0";
+                win.style.transform = "none";
+                win.style.width = "100vw";
+                win.style.height = "calc(100vh - 40px)";
+                win.dataset.maximized = "true";
+            }
+        });
+    }
 });
 
-const storeIcon = document.getElementById("store-icon");
-
-storeIcon.addEventListener("dblclick", () => {
-    openWindow(storeScreen);
-    storeScreen.style.zIndex = highestZIndex++;
-});
-
-var selectedIcon = undefined
-
-var welcomeScreen = document.querySelector("#welcome")
-
-var welcomeScreenClose = document.querySelector("#welcomeclose")
-
-var welcomeScreenOpen = document.querySelector("#welcomeopen")
-
-var notesScreen = document.querySelector("#notes")
-
-var notesScreenClose = document.querySelector("#notesclose")
-
-var storeScreen = document.querySelector("#store")
-
-var storeScreenClose = document.querySelector("#storeclose")
-
-var biggestIndex = 1;
-
-let highestZIndex = 1;
-
-function closeWindow(element) {
-  element.style.display = "none"
+// Make startup popup draggable and closeable
+const welcomePopup = document.getElementById("welcome-popup");
+if (welcomePopup) {
+    dragElement(welcomePopup);
+}
+const welcomeClose = document.getElementById("welcomeclose");
+if (welcomeClose && welcomePopup) {
+    welcomeClose.addEventListener("click", () => {
+        welcomePopup.style.display = "none";
+    });
 }
 
-function openWindow(element) {
-  element.style.display = "block"
-}
-
-welcomeScreenClose.addEventListener("click", function() {
-  closeWindow(welcomeScreen);
-});
-
-welcomeScreenOpen.addEventListener("click", function() {
-  openWindow(welcomeScreen);
-});
-
-function handleIconTap(element) {
-  if (element.classList.contains("thechosenone")) {
-    deselectIcon(element)
-    openWindow(window)
-  } else {
-    selectIcon(element)
-  }
-}
-
-function handleWindowTap(element) {
-    element.style.zIndex = highestZIndex++; 
-}
-
-dragElement(document.querySelector("#notes"))
-
-dragElement(document.querySelector("#store"))
-
-closewindow.addEventListener("click", function() {
-  closeWindow(notesScreen);
-})
-
-closewindow2.addEventListener("click", function() {
-  closeWindow(storeScreen);
-})
-
-function addWindowTapHandling(element) {
-  element.addEventListener("mousedown", () =>
-    handleWindowTap(element)
-  )
-}
-
-addWindowTapHandling(welcome)
-
-addWindowTapHandling(notes)
-
-addWindowTapHandling(store)
-
+// App Elements & References
+const userguideScreen = document.getElementById("userguide");
+const notesScreen = document.getElementById("notes");
+const storeScreen = document.getElementById("store");
 const terminalScreen = document.getElementById("terminal");
+const chromeScreen = document.getElementById("chrome");
+
+// Desktop Icon Double-Click Bindings
+const userguideIcon = document.getElementById("userguide-icon");
+const notesIcon = document.getElementById("notes-icon");
+const storeIcon = document.getElementById("store-icon");
 const terminalIcon = document.getElementById("terminal-icon");
+const chromeIcon = document.getElementById("chrome-icon");
+
+if (userguideIcon) userguideIcon.addEventListener("dblclick", () => openWindow(userguideScreen));
+if (notesIcon) notesIcon.addEventListener("dblclick", () => openWindow(notesScreen));
+if (storeIcon) storeIcon.addEventListener("dblclick", () => openWindow(storeScreen));
+if (terminalIcon) terminalIcon.addEventListener("dblclick", () => openWindow(terminalScreen));
+if (chromeIcon) chromeIcon.addEventListener("dblclick", () => openWindow(chromeScreen));
+
+// Close Button Bindings
+const userguideClose = document.getElementById("userguideclose");
+const closeWindowNotes = document.getElementById("closewindow");
+const closeWindowStore = document.getElementById("closewindow2");
 const terminalClose = document.getElementById("terminalclose");
+const chromeClose = document.getElementById("chromeclose");
+
+if (userguideClose) userguideClose.addEventListener("click", () => closeWindow(userguideScreen));
+if (closeWindowNotes) closeWindowNotes.addEventListener("click", () => closeWindow(notesScreen));
+if (closeWindowStore) closeWindowStore.addEventListener("click", () => closeWindow(storeScreen));
+if (terminalClose) terminalClose.addEventListener("click", () => closeWindow(terminalScreen));
+if (chromeClose) chromeClose.addEventListener("click", () => closeWindow(chromeScreen));
+
+// Chrome Navigation Controls
+const chromeUrl = document.getElementById("chrome-url");
+const chromeGo = document.getElementById("chrome-go");
+const chromeFrame = document.getElementById("chrome-frame");
+const chromeHome = document.getElementById("chrome-home");
+
+function navigateChrome() {
+    let inputVal = chromeUrl.value.trim();
+    if (!inputVal) return;
+
+    let targetUrl = "";
+    if (inputVal.startsWith("http://") || inputVal.startsWith("https://")) {
+        targetUrl = inputVal;
+    } else if (inputVal.includes(".") && !inputVal.includes(" ")) {
+        targetUrl = "https://" + inputVal;
+    } else {
+        targetUrl = "https://www.bing.com/search?q=" + encodeURIComponent(inputVal);
+    }
+
+    chromeUrl.value = targetUrl;
+    chromeFrame.src = targetUrl;
+}
+
+if (chromeGo) chromeGo.addEventListener("click", navigateChrome);
+if (chromeUrl) {
+    chromeUrl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") navigateChrome();
+    });
+}
+if (chromeHome) {
+    chromeHome.addEventListener("click", () => {
+        chromeUrl.value = "https://www.bing.com";
+        chromeFrame.src = "https://www.bing.com";
+    });
+}
+
+// Terminal Commands Logic
 const terminalInput = document.getElementById("terminal-input");
 const terminalOutput = document.getElementById("terminal-output");
 
-// Open & Close bindings
-terminalIcon.addEventListener("dblclick", () => {
-    openWindow(terminalScreen);
-    terminalScreen.style.zIndex = highestZIndex++;
-    terminalInput.focus();
-});
-
-terminalClose.addEventListener("click", () => {
-    closeWindow(terminalScreen);
-});
-
-addWindowTapHandling(terminalScreen);
-dragElement(terminalScreen);
-
-// Command Line Logic
-terminalInput.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        let command = terminalInput.value.trim();
-        terminalOutput.innerHTML += `user@NicksterOS:~$ ${command}<br>`;
-        
-        // Process commands
-        if (command === "help") {
-            terminalOutput.innerHTML += `Available commands: clear, help, date, echo [text]<br>`;
-        } else if (command === "clear") {
-            terminalOutput.innerHTML = "";
-        } else if (command === "date") {
-            terminalOutput.innerHTML += `${new Date()}<br>`;
-        } else if (command.startsWith("echo ")) {
-            terminalOutput.innerHTML += `${command.slice(5)}<br>`;
-        } else if (command !== "") {
-            terminalOutput.innerHTML += `Command not found: ${command}<br>`;
+if (terminalInput) {
+    terminalInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            let command = terminalInput.value.trim();
+            terminalOutput.innerHTML += `user@NicksterOS:~$ ${command}<br>`;
+            
+            if (command === "help") {
+                terminalOutput.innerHTML += `Available commands: clear, help, date, echo [text]<br>`;
+            } else if (command === "clear") {
+                terminalOutput.innerHTML = "";
+            } else if (command === "date") {
+                terminalOutput.innerHTML += `${new Date()}<br>`;
+            } else if (command.startsWith("echo ")) {
+                terminalOutput.innerHTML += `${command.slice(5)}<br>`;
+            } else if (command !== "") {
+                terminalOutput.innerHTML += `Command not found: ${command}<br>`;
+            }
+            
+            terminalInput.value = "";
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
         }
-        
-        terminalInput.value = "";
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-    }
-});
+    });
+}
+
+// Start Menu Toggle & Bindings
+const startBtn = document.getElementById("startBtn");
+const startMenu = document.getElementById("startMenu");
+
+if (startBtn && startMenu) {
+    startBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        startMenu.style.display = (startMenu.style.display === "block") ? "none" : "block";
+    });
+
+    document.addEventListener("click", () => {
+        startMenu.style.display = "none";
+    });
+
+    startMenu.addEventListener("click", (e) => {
+        e.stopPropagation();
+    });
+}
+
+const startUserGuide = document.getElementById("start-userguide");
+const startNotes = document.getElementById("start-notes");
+const startStore = document.getElementById("start-store");
+const startTerminal = document.getElementById("start-terminal");
+const startChrome = document.getElementById("start-chrome");
+
+if (startUserGuide) startUserGuide.addEventListener("click", () => { openWindow(userguideScreen); startMenu.style.display = "none"; });
+if (startNotes) startNotes.addEventListener("click", () => { openWindow(notesScreen); startMenu.style.display = "none"; });
+if (startStore) startStore.addEventListener("click", () => { openWindow(storeScreen); startMenu.style.display = "none"; });
+if (startTerminal) startTerminal.addEventListener("click", () => { openWindow(terminalScreen); startMenu.style.display = "none"; });
+if (startChrome) startChrome.addEventListener("click", () => { openWindow(chromeScreen); startMenu.style.display = "none"; });
+
+updateTaskbar();
