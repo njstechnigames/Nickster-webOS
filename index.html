@@ -6,10 +6,10 @@
     <title>NicksterOS</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="background-image: url('./bg3.jpg'); background-size: cover; background-position: center; background-attachment: fixed; height: 100vh; margin: 0; overflow: hidden;">
+<body id="os-body" style="background-image: url('./bg3.jpg'); background-size: cover; background-position: center; background-attachment: fixed; height: 100vh; margin: 0; overflow: hidden;">
 
     <!-- Top Taskbar -->
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; display: flex; align-items: center; backdrop-filter: blur(10px); background-color: rgba(6, 209, 169, 0.35); color: #000000; justify-content: space-between; z-index: 99999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+    <div id="topTaskbar" style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; display: flex; align-items: center; backdrop-filter: blur(10px); background-color: rgba(6, 209, 169, 0.35); color: #000000; justify-content: space-between; z-index: 99999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
       
       <!-- Left side: OS Title -->
       <div style="display: flex; align-items: center; gap: 8px; margin-left: 12px;">
@@ -33,6 +33,10 @@
       <input type="text" placeholder="Search apps, settings..." style="width: 100%; padding: 8px; border-radius: 6px; border: none; outline: none; margin-bottom: 12px; box-sizing: border-box; background: #333; color: white;" />
       <div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">Pinned Apps</div>
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+        <div class="start-app-item" id="start-settings" style="cursor: pointer; padding: 8px; border-radius: 8px;">
+          <img src="./settings_icon.png" style="width: 36px; height: 36px; border-radius: 8px;"><br>
+          <span style="font-size: 11px;">Settings</span>
+        </div>
         <div class="start-app-item" id="start-userguide" style="cursor: pointer; padding: 8px; border-radius: 8px;">
           <img src="./userguide_icon.png" style="width: 36px; height: 36px; border-radius: 8px;"><br>
           <span style="font-size: 11px;">User Guide</span>
@@ -58,6 +62,10 @@
 
     <!-- Desktop Icons Grid (Single Column Layout) -->
     <div style="padding-top: 56px; padding-left: 16px; display: flex; flex-direction: column; gap: 12px; width: 85px;">
+        <div class="desktop-icon" id="settings-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
+          <img src="./settings_icon.png" style="width: 44px; height: 44px; border-radius: 10px;">
+          <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">Settings</p>
+        </div>
         <div class="desktop-icon" id="userguide-icon" style="text-align: center; padding: 6px; filter: drop-shadow(0 0 8px black); cursor: pointer;">
           <img src="./userguide_icon.png" style="width: 44px; height: 44px; border-radius: 10px;">
           <p style="margin: 4px 0 0 0; color: #fff; font-size: 11px;">User Guide</p>
@@ -81,21 +89,52 @@
     </div>
 
     <!-- STARTUP WELCOME POPUP NOTE -->
-    <div id="welcome-popup" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px; border: 2px solid #00ff66; width: 260px; border-radius: 16px; background-color: #147907; color: #fff; z-index: 50000; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+    <div id="welcome-popup" style="position: absolute; top: 50%; left: 30%; transform: translate(-50%, -50%); padding: 16px; border: 2px solid #00ff66; width: 300px; border-radius: 16px; background-color: #147907; color: #fff; z-index: 50000; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
         <div id="welcomeheader" style="background: #ddd; color: #000; padding: 6px 10px; margin: -16px -16px 12px -16px; border-top-left-radius: 14px; border-top-right-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: move;">
             <span style="font-weight: bold; font-size: 12px;">|Welcome!|</span>
             <span id="welcomeclose" style="cursor: pointer; font-weight: bold; padding: 2px 6px;">X</span>
         </div>
         <div style="font-family: sans-serif;">
-            <p style="margin: 4px 0;">Hello User!</p>
-            <h3 style="margin: 6px 0; font-size: 14px;">Welcome to NicksterOs! Tabs can be dragged by clicking and holding the top and can be minimised [-] maximised [square] and closed [x]. double click apps to open them! More in the user manual!</h3>
+            <p style="margin: 4px 0; font-weight: bold;">Hello User!</p>
+            <p style="margin: 6px 0; font-size: 13px; line-height: 1.4;">Welcome to NicksterOS! Tabs can be dragged by clicking and holding the top and can be minimised [-] maximised [□] and closed [x]. double click apps to open them! More in the user manual!</p>
             <img src="./bg.png" style="width: 100%; border-radius: 8px; margin: 6px 0;" />
             <a href="https://mail.google.com/mail/u/0/#inbox/" target="_blank" style="color: #00ff66; font-size: 12px; display: block; margin-top: 6px;">Email me!</a>
         </div>
     </div>
 
+    <!-- WINDOW: Settings App -->
+    <div class="window" id="settings" style="display: none; background-color: #1e1e1e; color: #fff; position: absolute; top: 40%; left: 40%; width: 440px; height: 320px; border: 1px solid #444; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); overflow: hidden;" data-title="Settings">
+        <div class="windowheader" id="settingsheader" style="background: #333; color: #fff; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #444;">
+            <span style="font-weight: bold; font-family: sans-serif; font-size: 13px;">Settings</span>
+            <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
+                <button class="min-btn" style="cursor: pointer; background: #555; color: white; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">_</button>
+                <button class="max-btn" style="cursor: pointer; background: #555; color: white; border: none; font-weight: bold; border-radius: 3px; padding: 2px 8px;">□</button>
+                <span id="settingsclose" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
+            </div>
+        </div>
+        <div style="padding: 16px; font-family: sans-serif;">
+            <h3 style="margin-top: 0; color: #00ff66; font-size: 15px;">OS Preferences</h3>
+            
+            <!-- Background Options Selector -->
+            <div style="margin-bottom: 14px; background: #2a2a2a; padding: 10px; border-radius: 6px;">
+                <label style="font-size: 12px; display: block; margin-bottom: 8px;">Select Background:</label>
+                <div style="display: flex; gap: 10px;">
+                    <button class="bg-option-btn" data-bg="bg3.jpg" style="flex: 1; padding: 6px; background: #111; color: #00ff66; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">bg3.jpg</button>
+                    <button class="bg-option-btn" data-bg="Backround2.jpg" style="flex: 1; padding: 6px; background: #111; color: #00ff66; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Backround2.jpg</button>
+                    <button class="bg-option-btn" data-bg="Backround3.jpg" style="flex: 1; padding: 6px; background: #111; color: #00ff66; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Backround3.jpg</button>
+                </div>
+            </div>
+
+            <!-- Dark/Light Mode Toggle -->
+            <div style="background: #2a2a2a; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                <label style="font-size: 12px;">Taskbar Theme Mode:</label>
+                <button id="mode-toggle-btn" style="background: #444; color: #fff; border: 1px solid #666; padding: 5px 14px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">Toggle Dark/Light</button>
+            </div>
+        </div>
+    </div>
+
     <!-- WINDOW: User Guide App -->
-    <div class="window" id="userguide" style="display: none; background-color: #147907; color: #fff; position: absolute; top: 45%; left: 45%; width: 280px; border: 2px solid #00ff66; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); overflow: hidden;" data-title="User Guide">
+    <div class="window" id="userguide" style="display: none; background-color: #147907; color: #fff; position: absolute; top: 45%; left: 45%; width: 340px; height: 420px; border: 2px solid #00ff66; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); overflow: hidden;" data-title="User Guide">
         <div class="windowheader" id="userguideheader" style="background: #ddd; color: #000; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #ccc;">
             <span style="font-weight: bold; font-size: 12px;">|User Guide|</span>
             <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
@@ -104,11 +143,12 @@
                 <span id="userguideclose" style="cursor: pointer; font-weight: bold; padding: 2px 8px;">X</span>
             </div>
         </div>
-        <div style="padding: 16px; font-family: sans-serif;">
-            <!-- YOU CAN WRITE YOUR USER GUIDE CONTENT HERE -->
-            <p style="margin: 4px 0;">User Guide</p>
-            <h3 style="margin: 6px 0; font-size: 14px;">About the OS:</h3>
-            <p style="font-size: 13px; color: #e0e0e0;">For now, NicksterOS only has 5 apps (more coming soon) and those 5 apps are: user guide (what you're in right now), chrome, NRterminal, Nick notes (notes app), and App Archives (no apps yet :[). Nick notes is used for writing notes and later a file system will be added to the OS soon. Chrome is exactly what it sounds like, although it uses bing as chrome doesnt work properly, i already made the chrome logo so i decided to keep it also, if you click on a link, it will open that tab in your actual browser (still a bug in progress). NRterminal is used for simple commands and isnt really useful (yet :]). App archives is a app that will let you "download" apps to your desktop. APPS COMING SOON: Settings: can change backround, user name, etc. Snake: simple game to play in the desktop :]. Calculator: used for simple calculations (its a calculator! what elso do you expect? doom? good idea acctually, ill consider adding it).</p>
+        <div style="padding: 16px; font-family: sans-serif; height: calc(100% - 45px); overflow-y: auto; box-sizing: border-box;">
+            <h3 style="margin: 0 0 6px 0; font-size: 16px;">User Guide</h3>
+            <p style="margin: 0 0 8px 0; font-weight: bold; font-size: 13px;">About the OS:</p>
+            <p style="margin: 0; font-size: 12px; line-height: 1.4; color: #f0f0f0;">
+                For now, NicksterOS only has 5 apps (more coming soon) and those 5 apps are: user guide (what you're in right now), chrome, NRTerminal, Nick notes (notes app), and App Archives (no apps yet :[). Nick notes is used for writing notes and later a file system will be added to the OS soon. Chrome is exactly what it sounds like, although it uses bing as chrome doesnt work properly, i already made the chrome logo so i decided to keep it also, if you click on a link, it will open that tab in your actual browser (still a bug in progress). NRTerminal is used for simple commands and isnt really useful (yet :]). App archives is a app that will let you "download" apps to your desktop. APPS COMING SOON: Settings: can change backround, user name, etc. Snake: simple game to play in the desktop :]. Calculator: used for simple calculations (its a calculator! what elso do you expect? doom? good idea acctually, ill consider adding it).
+            </p>
         </div>
     </div>
 
@@ -137,12 +177,12 @@
         </div>
         <div style="padding: 20px; font-family: sans-serif;">
             <h3>App Archives</h3>
-            <p>Welcome to the app store! More apps coming soon.</p>
+            <p>Welcome to app Archives! No apps available at the moment. :[</p>
         </div>
     </div>
 
-    <!-- WINDOW 4: LXTerminal -->
-    <div class="window" id="terminal" style="display: none; background-color: #0c0c0c; color: #00ff66; position: absolute; top: 50%; left: 50%; width: 570px; height: 350px; border: 1px solid #444; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.5); overflow: hidden; font-family: monospace;" data-title="LXTerminal">
+    <!-- WINDOW 4: NRTerminal -->
+    <div class="window" id="terminal" style="display: none; background-color: #0c0c0c; color: #00ff66; position: absolute; top: 50%; left: 50%; width: 570px; height: 350px; border: 1px solid #444; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.5); overflow: hidden; font-family: monospace;" data-title="NRTerminal">
         <div class="windowheader" id="terminalheader" style="background: #1f1f1f; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #444;">
             <span style="font-weight: bold; font-size: 13px;">user@NicksterOS: ~</span>
             <div style="display: flex; gap: 6px; align-items: center; padding-right: 4px;">
