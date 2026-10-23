@@ -15,3 +15,4 @@ Here are what it includes:
 - new apps
 - new look for some things
 - added start menu
+- new commands
